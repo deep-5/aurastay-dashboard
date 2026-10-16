@@ -69,7 +69,7 @@ export const App: React.FC = () => {
 
       {/* Main Content Area */}
       <div
-        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${
+        className={`flex-1 flex flex-col min-w-0 transition-all duration-200 ${
           sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'
         }`}
       >

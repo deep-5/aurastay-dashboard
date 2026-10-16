@@ -12,9 +12,7 @@ import {
   Menu,
   CheckCircle2,
   BookmarkCheck,
-  BedDouble,
-  PanelLeftClose,
-  PanelLeftOpen
+  BedDouble
 } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 import { UserRole } from '../../types';
@@ -28,8 +26,6 @@ export const Header: React.FC = () => {
     switchRole,
     searchQuery,
     setSearchQuery,
-    sidebarCollapsed,
-    setSidebarCollapsed,
     setMobileMenuOpen,
     inboxMessages,
     reservations,
@@ -63,19 +59,8 @@ export const Header: React.FC = () => {
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
-        e.preventDefault();
-        setSidebarCollapsed(!sidebarCollapsed);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [sidebarCollapsed, setSidebarCollapsed]);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const pageTitles: Record<string, string> = {
     dashboard: 'Dashboard',
@@ -116,27 +101,13 @@ export const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-20 bg-white border-b border-[#E7EBF0] h-16 px-4 lg:px-8 flex items-center justify-between transition-all">
-      {/* Left: Hamburger & Desktop Expand Sidebar Toggle & Current Page Title */}
-      <div className="flex items-center gap-2.5">
+      {/* Left: Hamburger & Current Page Title */}
+      <div className="flex items-center gap-3">
         <button
           onClick={() => setMobileMenuOpen(true)}
           className="lg:hidden p-2 text-[#6B7280] hover:text-[#19202D] hover:bg-[#F8FAFC] rounded-lg"
-          title="Open Menu"
         >
           <Menu className="w-5 h-5" />
-        </button>
-
-        {/* Desktop Expand / Collapse Sidebar Toggle Button */}
-        <button
-          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className="hidden lg:flex items-center justify-center w-8 h-8 rounded-lg border border-[#E7EBF0] hover:border-[#2583E9] bg-[#F8FAFC] hover:bg-[#EAF3FF] text-[#6B7280] hover:text-[#2583E9] transition-all cursor-pointer group shadow-2xs"
-          title={sidebarCollapsed ? "Expand Sidebar (Ctrl+B)" : "Collapse Sidebar (Ctrl+B)"}
-        >
-          {sidebarCollapsed ? (
-            <PanelLeftOpen className="w-4 h-4 text-[#2583E9] group-hover:scale-110 transition-transform" />
-          ) : (
-            <PanelLeftClose className="w-4 h-4 group-hover:scale-110 transition-transform" />
-          )}
         </button>
 
         <h1 className="text-lg lg:text-xl font-extrabold text-[#19202D] tracking-tight">
