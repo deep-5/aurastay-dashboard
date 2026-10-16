@@ -18,6 +18,8 @@ import {
   ChevronRight,
   Hotel,
   ArrowUpRight,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 import { isTabAllowedForRole, ROLE_CONFIGS } from '../../utils/rbac';
@@ -75,23 +77,34 @@ export const Sidebar: React.FC = () => {
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-white select-none">
-      {/* AuraStay Original Brand Header */}
-      <div className={`flex items-center h-16 border-b border-[#E7EBF0] px-4 ${sidebarCollapsed ? 'justify-center' : 'justify-between'}`}>
+      {/* AuraStay Original Brand Header with Expand/Collapse button */}
+      <div className="flex items-center h-16 border-b border-[#E7EBF0] px-3.5 justify-between">
         <div
           className="cursor-pointer"
-          onClick={() => handleNavClick('dashboard')}
+          onClick={() => {
+            if (sidebarCollapsed) {
+              setSidebarCollapsed(false);
+            } else {
+              handleNavClick('dashboard');
+            }
+          }}
+          title={sidebarCollapsed ? "Click to Expand Sidebar" : "AuraStay Home"}
         >
           <AuraStayLogo size="sm" showText={!sidebarCollapsed} />
         </div>
-        {!sidebarCollapsed && (
-          <button
-            onClick={() => setSidebarCollapsed(true)}
-            className="hidden lg:flex items-center justify-center w-6 h-6 text-[#6B7280] hover:text-[#19202D] hover:bg-[#F8FAFC] rounded-md transition-colors"
-            title="Collapse Sidebar"
-          >
-            <ChevronLeft className="w-3.5 h-3.5" />
-          </button>
-        )}
+
+        {/* Desktop Toggle Button in Top Bar */}
+        <button
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          className="hidden lg:flex items-center justify-center w-7 h-7 text-[#6B7280] hover:text-[#2583E9] hover:bg-[#EAF3FF] rounded-lg transition-colors cursor-pointer"
+          title={sidebarCollapsed ? "Expand Sidebar (Ctrl+B)" : "Collapse Sidebar (Ctrl+B)"}
+        >
+          {sidebarCollapsed ? (
+            <PanelLeftOpen className="w-4 h-4 text-[#2583E9]" />
+          ) : (
+            <PanelLeftClose className="w-4 h-4" />
+          )}
+        </button>
       </div>
 
       {/* Navigation List */}
@@ -182,28 +195,55 @@ export const Sidebar: React.FC = () => {
         </div>
       )}
 
-      {/* Collapsed expand button */}
-      {sidebarCollapsed && (
-        <div className="hidden lg:flex items-center justify-center p-3 border-t border-[#E7EBF0]">
-          <button
-            onClick={() => setSidebarCollapsed(false)}
-            className="flex items-center justify-center w-8 h-8 text-[#6B7280] hover:text-[#19202D] hover:bg-[#F8FAFC] rounded-lg transition-colors"
-            title="Expand Sidebar"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-      )}
+      {/* Bottom Expand / Collapse Toggle Row */}
+      <div className="hidden lg:block p-3 border-t border-[#E7EBF0] bg-[#F8FAFC]/50">
+        <button
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-bold text-[#6B7280] hover:text-[#2583E9] hover:bg-[#EAF3FF] border border-transparent hover:border-[#2583E9]/20 transition-all cursor-pointer ${
+            sidebarCollapsed ? 'justify-center' : 'justify-between'
+          }`}
+          title={sidebarCollapsed ? "Expand Sidebar (Ctrl+B)" : "Collapse Sidebar (Ctrl+B)"}
+        >
+          {sidebarCollapsed ? (
+            <div className="flex items-center gap-1.5" title="Expand Sidebar">
+              <PanelLeftOpen className="w-4 h-4 text-[#2583E9]" />
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-2">
+                <PanelLeftClose className="w-4 h-4" />
+                <span>Collapse Sidebar</span>
+              </div>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white border border-[#E7EBF0] text-[#64748B]">
+                Ctrl+B
+              </span>
+            </>
+          )}
+        </button>
+      </div>
     </div>
   );
 
   return (
     <>
       <aside
-        className={`hidden lg:block fixed top-0 left-0 bottom-0 z-30 border-r border-[#E7EBF0] bg-white transition-all duration-200 ${
-          sidebarCollapsed ? 'w-20' : 'w-60'
+        className={`hidden lg:block fixed top-0 left-0 bottom-0 z-30 border-r border-[#E7EBF0] bg-white transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? 'w-20' : 'w-64'
         }`}
       >
+        {/* Floating Expand/Collapse pill button on right border */}
+        <button
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          className="absolute -right-3.5 top-20 z-40 w-7 h-7 bg-white border border-[#E7EBF0] hover:border-[#2583E9] text-[#6B7280] hover:text-[#2583E9] rounded-full shadow-sm flex items-center justify-center transition-all cursor-pointer hover:scale-110"
+          title={sidebarCollapsed ? "Expand Sidebar (Ctrl+B)" : "Collapse Sidebar (Ctrl+B)"}
+        >
+          {sidebarCollapsed ? (
+            <ChevronRight className="w-3.5 h-3.5" />
+          ) : (
+            <ChevronLeft className="w-3.5 h-3.5" />
+          )}
+        </button>
+
         {sidebarContent}
       </aside>
 
